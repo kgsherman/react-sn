@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
-import { AuthProvider } from '../context/auth-context';
 
 import Home from './Home';
 import AuthCallback from './AuthCallback';
 import Incidents from './Incidents';
 import Header from './Header';
+import Authenticator from './Authenticator';
+import Unauthorized from './Unauthorized';
 
-import { oauth2Uri } from '../utils/auth';
+import { useAuthValue } from '../context/auth-context';
 
-const App = () => (
-  <AuthProvider>
+const App = () => {
+  const [{ authenticated }] = useAuthValue();
+
+  const PrivateRoute = ({ component: Component, ...rest }) => {
+    return <Route {...rest} render={props => authenticated ? <Component {...props} /> : <Unauthorized />} />;
+  };
+
+  return (
     <Router>
+      <Authenticator />
       <div>
         <Header />
         <nav>
@@ -21,17 +28,17 @@ const App = () => (
               <Link to="/">Home</Link>
             </li>
             <li>
-              <a href={oauth2Uri}>Sign in</a>
+              <Link to="/incidents">Incidents</Link>
             </li>
           </ul>
         </nav>
 
         <Route path="/" exact component={Home} />
-        <Route path="/incidents" component={Incidents} />
+        <PrivateRoute path="/incidents" component={Incidents} />
         <Route path="/auth/callback" exact component={AuthCallback} />
       </div>
     </Router>
-  </AuthProvider>
-);
+  );
+};
 
 export default App;

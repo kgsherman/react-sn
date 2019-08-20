@@ -4,14 +4,14 @@ import SNAPI from 'snapi';
 import { useAuthValue } from '../context/auth-context';
 
 const Incidents = () => {
-  const { authToken } = useAuthValue();
+  const [{ authenticated }] = useAuthValue();
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const sn = new SNAPI({
-        token: authToken,
+        token: window.localStorage.getItem('token'),
         instance: 'dev72041'
       });
 

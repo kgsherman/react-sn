@@ -2,17 +2,31 @@ import React from 'react';
 
 import { useAuthValue } from '../context/auth-context';
 
-const Header = () => {
-    const { authToken } = useAuthValue();
+import { oauth2Uri } from '../utils/auth';
 
-    return (
-        <div>
-            {authToken
-                ? <span>I'm logged in with the token {authToken}</span>
-                : <span>I'm not logged in</span>
-            }
-        </div>
-    );
-}
+const Header = () => {
+  const [{ authenticated, user }, dispatch] = useAuthValue();
+
+  const handleSignOut = () => {
+    dispatch({ type: 'signOut' });
+  };
+
+  const renderSignedIn = () => (
+    <div>
+      <span>Hello, {user.name}</span>
+      <a href="#" onClick={handleSignOut}>
+        Sign out
+      </a>
+    </div>
+  );
+
+  const renderSignedOut = () => (
+    <div>
+      <a href={oauth2Uri}>Sign in</a>
+    </div>
+  );
+
+  return authenticated ? renderSignedIn() : renderSignedOut();
+};
 
 export default Header;
