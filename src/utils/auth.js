@@ -6,7 +6,7 @@ import { getAuthenticatedUser } from '../utils/sn';
 
 const auth = new ClientOAuth2({
   clientId: '708e03d320033300941bb03db73a7eff',
-  clientSecret: 'Nl;Uz,&Hh]',
+  //clientSecret: 'Nl;Uz,&Hh]',
   accessTokenUri: 'https://dev72041.service-now.com/oauth_token.do',
   authorizationUri: 'https://dev72041.service-now.com/oauth_auth.do',
   redirectUri: 'http://localhost:3000/auth/callback',

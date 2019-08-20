@@ -7,22 +7,28 @@ import { oauth2Uri } from '../utils/auth';
 const Header = () => {
   const [{ authenticated, user }, dispatch] = useAuthValue();
 
-  const handleSignOut = () => {
+  const handleSignIn = e => {
+    e.preventDefault();
+    window.location = oauth2Uri;
+  };
+
+  const handleSignOut = e => {
+    e.preventDefault();
     dispatch({ type: 'signOut' });
   };
 
   const renderSignedIn = () => (
     <div>
       <span>Hello, {user.name}</span>
-      <a href="#" onClick={handleSignOut}>
+      <button onClick={handleSignOut}>
         Sign out
-      </a>
+      </button>
     </div>
   );
 
   const renderSignedOut = () => (
     <div>
-      <a href={oauth2Uri}>Sign in</a>
+      <button onClick={handleSignIn}>Sign in</button>
     </div>
   );
 
