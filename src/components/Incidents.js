@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SNAPI from 'snapi';
+import SNAPI from '../utils/snapi';
 
 import { useAuthValue } from '../context/auth-context';
 
