@@ -7,7 +7,8 @@ const AuthCallback = () => {
     useEffect(() => {
         (async () => {
             await oauth2Callback(window.location);
-            window.location = '/';
+            const savedUrl = window.sessionStorage.getItem('savedUrl') || '/';
+            window.location = savedUrl;
         })();
     }, []);
     

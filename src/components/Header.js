@@ -9,6 +9,8 @@ const Header = () => {
 
   const handleSignIn = e => {
     e.preventDefault();
+    window.sessionStorage.setItem('savedUrl', window.location);
+
     window.location = oauth2Uri;
   };
 
