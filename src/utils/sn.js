@@ -2,7 +2,7 @@ import snapi from './snapi';
 
 export const getAuthenticatedUser = async () => {
   const token = localStorage.getItem('token');
-  const instance = 'dev72041';
+  const instance = 'dev59227';
 
   if (!token) return false;
 

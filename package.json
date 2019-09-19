@@ -1,7 +1,6 @@
 {
   "name": "react-sn",
   "version": "0.1.0",
-  "private": true,
   "homepage": "https://kgsherman.github.io/react-sn",
   "dependencies": {
     "client-oauth2": "^4.2.5",
@@ -10,7 +9,8 @@
     "react-dom": "^16.9.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.1",
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,6 +36,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^2.1.1"
+    "bulma": "^0.7.5",
+    "gh-pages": "^2.1.1",
+    "node-sass": "^4.12.0"
   }
 }

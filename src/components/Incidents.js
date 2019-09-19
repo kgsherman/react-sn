@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import SNAPI from '../utils/snapi';
 
-import { useAuthValue } from '../context/auth-context';
-
 const Incidents = () => {
-  const [{ authenticated }] = useAuthValue();
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +11,7 @@ const Incidents = () => {
     (async () => {
       const sn = new SNAPI({
         token: window.localStorage.getItem('token'),
-        instance: 'dev72041'
+        instance: 'dev59227'
       });
 
       const incidents = await sn.getRecords('incident', {
@@ -26,15 +25,42 @@ const Incidents = () => {
     })();
   }, []);
 
+  const IncidentTable = () => (
+    <table className="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Number</th>
+          <th>Short description</th> 
+        </tr>
+      </thead>
+      <tbody>
+        {incidents.map(incident =>
+          <tr>
+            <td>{incident.number}</td>
+            <td>{incident.short_description}</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  );
+
   return (
-      <div>
-          <code>
-              {loading
-                  ? 'Loading...'
-                  : JSON.stringify(incidents, null, 2)                
-              }
-          </code>
+    <>
+      <div class="container">
+        <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li class="is-active"><Link to="/incidents" aria-current="page">Incidents</Link></li>
+          </ul>
+        </nav>
       </div>
+      <div class="container">
+        {loading
+          ? 'Loading...'
+          : <IncidentTable />
+        }
+      </div>
+    </>
   );
 };
 

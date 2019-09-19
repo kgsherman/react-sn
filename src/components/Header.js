@@ -1,40 +1,73 @@
 import React from 'react';
+import styled from 'styled-components';
 
-import { useAuthValue } from '../context/auth-context';
+import { useAuth } from '../context/auth-context';
 
 import { oauth2Uri } from '../utils/auth';
 
-const Header = () => {
-  const [{ authenticated, user }, dispatch] = useAuthValue();
+const HeaderElement = styled.div`
+  color: White;
+  background-color: #16697A;
+  padding: 1.4em;
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
+  border-bottom-color: #82C0CC;
+  box-shadow: 0px 3px 3px 0 rgba(0, 0, 0, 0.25);
+`;
+
+const Header = (props) => {
+  const { signOut, authState } = useAuth();
 
   const handleSignIn = e => {
     e.preventDefault();
-    window.sessionStorage.setItem('savedUrl', window.location);
 
+    window.sessionStorage.setItem('savedUrl', window.location.pathname);
     window.location = oauth2Uri;
   };
 
   const handleSignOut = e => {
     e.preventDefault();
-    dispatch({ type: 'signOut' });
+    signOut();
   };
 
-  const renderSignedIn = () => (
-    <div>
-      <span>Hello, {user.name}</span>
-      <button onClick={handleSignOut}>
-        Sign out
-      </button>
+  const renderLoading = () => (
+    <div className="level-item">
+      ...
     </div>
   );
 
+  const renderSignedIn = () => (
+    <>
+      <span className="level-item">{authState.user.name}</span>
+      <button className="level-item button is-small" onClick={handleSignOut}>
+        Sign out
+      </button>
+    </>
+  );
+
   const renderSignedOut = () => (
-    <div>
+    <div className="level-item">
       <button onClick={handleSignIn}>Sign in</button>
     </div>
   );
 
-  return authenticated ? renderSignedIn() : renderSignedOut();
+  return (
+    <HeaderElement className="level">
+      <div className="level-left">
+        <p className="level-item">
+          React-SN
+        </p>
+      </div>
+      <div className="level-right">
+        {authState.loading 
+          ? renderLoading() 
+          : authState.authenticated 
+            ? renderSignedIn() 
+            : renderSignedOut()
+        }
+      </div>
+    </HeaderElement>
+  );
 };
 
 export default Header;
