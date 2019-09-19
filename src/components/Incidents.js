@@ -15,7 +15,7 @@ const Incidents = () => {
       });
 
       const incidents = await sn.getRecords('incident', {
-        fields: ['number', 'short_description'],
+        fields: ['number', 'short_description', 'sys_id'],
         limit: 2,
         query: 'active=true'
       });
@@ -36,7 +36,7 @@ const Incidents = () => {
       <tbody>
         {incidents.map(incident =>
           <tr>
-            <td>{incident.number}</td>
+            <td><Link to={`/incidents/${incident.sys_id}`}>{incident.number}</Link></td>
             <td>{incident.short_description}</td>
           </tr>
         )}

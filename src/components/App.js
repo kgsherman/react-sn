@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Home from './Home';
 import AuthCallback from './AuthCallback';
 import Incidents from './Incidents';
+import Incident from './Incident';
 import Header from './Header';
 import Authenticator from './Authenticator';
 import Unauthorized from './Unauthorized';
@@ -39,8 +40,9 @@ const App = () => {
         <Header />
 
         <Route path="/" exact component={Home} />
-        <PrivateRoute path="/incidents" component={Incidents} />
         <Route exact path="/auth/callback" component={AuthCallback} />
+        <PrivateRoute exact path="/incidents" component={Incidents} />
+        <PrivateRoute path="/incidents/:id" component={Incident} />
       </div>
     </Router>
   );

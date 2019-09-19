@@ -6,7 +6,6 @@ const auth = new ClientOAuth2({
   accessTokenUri: 'https://dev59227.service-now.com/oauth_token.do',
   authorizationUri: 'https://dev59227.service-now.com/oauth_auth.do',
   redirectUri: 'http://localhost:3000/auth/callback',
-  state: 'keyboard-cat'
 });
 
 export const oauth2Callback = async uri => {
