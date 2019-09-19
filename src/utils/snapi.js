@@ -35,14 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function btoa(text) {
-    return Buffer.from(text).toString('base64');
-}
 var SNAPI = /** @class */ (function () {
     function SNAPI(_a) {
         var token = _a.token, instance = _a.instance;
         this.instance = instance;
         this.endpoint = "https://" + this.instance + ".service-now.com";
+        this.attachmentEndpoint = "https://" + this.instance + ".service-now.com/api/now/attachment";
         this.tableEndpoint = "https://" + this.instance + ".service-now.com/api/now/table";
         this.defaultHeaders = new Headers({
             'Content-Type': 'application/json',
@@ -154,6 +152,39 @@ var SNAPI = /** @class */ (function () {
                         response = _h.sent();
                         return [4 /*yield*/, this.handleResponse(response)];
                     case 2: return [2 /*return*/, _h.sent()];
+                }
+            });
+        });
+    };
+    SNAPI.prototype.getProfilePicture = function (sysId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var attachment, attachmentId, response, buffer, u8, b64encoded, mimetype;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getRecords('sys_attachment', {
+                            query: "table_sys_id=" + sysId + "^file_name=photo",
+                            limit: 1,
+                            fields: ['sys_id'],
+                        })];
+                    case 1:
+                        attachment = _a.sent();
+                        console.log('attachment', attachment);
+                        if (!(attachment && attachment[0] && attachment[0].sys_id)) return [3 /*break*/, 4];
+                        attachmentId = attachment[0].sys_id;
+                        return [4 /*yield*/, fetch(this.attachmentEndpoint + "/" + attachmentId + "/file", {
+                                method: 'GET',
+                                headers: this.defaultHeaders,
+                            })];
+                    case 2:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.arrayBuffer()];
+                    case 3:
+                        buffer = _a.sent();
+                        u8 = new Uint8Array(buffer);
+                        b64encoded = btoa([].reduce.call(new Uint8Array(buffer), function (p, c) { return p + String.fromCharCode(c); }, ''));
+                        mimetype = "image/jpeg";
+                        return [2 /*return*/, "data:" + mimetype + ";base64," + b64encoded];
+                    case 4: return [2 /*return*/, ''];
                 }
             });
         });
