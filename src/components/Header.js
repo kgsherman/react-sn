@@ -20,8 +20,6 @@ const Header = (props) => {
 
   const handleSignIn = e => {
     e.preventDefault();
-    console.log(oauth2Uri);
-    alert(oauth2Uri);
 
     window.sessionStorage.setItem('savedUrl', window.location.pathname);
     window.location = oauth2Uri;

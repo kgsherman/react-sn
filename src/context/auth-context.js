@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
-import { signOut } from '../utils/auth';
 import { getAuthenticatedUser } from '../utils/sn';
 
 const initialState = {
