@@ -1,4 +1,4 @@
-import snapi from './snapi';
+import snapi from 'snapi';
 
 export const getAuthenticatedUser = async () => {
   const token = localStorage.getItem('token');

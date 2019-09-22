@@ -3,13 +3,13 @@ import React, { createContext, useContext, useReducer } from 'react';
 import { signOut } from '../utils/auth';
 import { getAuthenticatedUser } from '../utils/sn';
 
-export const AuthContext = createContext();
-
 const initialState = {
   loading: true,
   authenticated: false,
   user: null
 };
+
+export const AuthContext = createContext(initialState);
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -46,7 +46,6 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'loading' });
     const userData = await getAuthenticatedUser();
     if (userData) {
-      console.log('User data', userData);
       dispatch({
         type: 'signIn',
         user: userData.result

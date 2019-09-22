@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import SNAPI from '../utils/snapi';
+import { useAuth } from '../context/auth-context';
+import { useSNAPI } from '../context/snapi-context';
 
 const Incidents = () => {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { authState } = useAuth();
+  const sn = useSNAPI();
 
   useEffect(() => {
     (async () => {
-      const sn = new SNAPI({
-        token: window.localStorage.getItem('token'),
-        instance: 'dev59227'
+
+      const response = await sn.getRecords('incident', {
+        fields: ['number', 'short_description', 'sys_id'],
+        query: `active=true^assigned_to=${authState.user.sysId}`
       });
 
-      const incidents = await sn.getRecords('incident', {
-        fields: ['number', 'short_description', 'sys_id'],
-        limit: 2,
-        query: 'active=true'
-      });
+      console.log('response', response)
+
+      const incidents = (await response.json()).result;
 
       setIncidents(incidents);
       setLoading(false);
@@ -30,7 +32,7 @@ const Incidents = () => {
       <thead>
         <tr>
           <th>Number</th>
-          <th>Short description</th> 
+          <th>Short description</th>
         </tr>
       </thead>
       <tbody>
@@ -46,15 +48,14 @@ const Incidents = () => {
 
   return (
     <>
-      <div class="container">
-        <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+      <div className="container">
+        <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
           <ul>
             <li><Link to="/">Home</Link></li>
-            <li class="is-active"><Link to="/incidents" aria-current="page">Incidents</Link></li>
+            <li className="is-active"><Link to="/incidents" aria-current="page">Incidents</Link></li>
           </ul>
         </nav>
-      </div>
-      <div class="container">
+
         {loading
           ? 'Loading...'
           : <IncidentTable />

@@ -4,10 +4,13 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 import { AuthProvider } from './context/auth-context';
+import { SNAPIProvider } from './context/snapi-context';
 
 ReactDOM.render(
   <AuthProvider>
-    <App />
+    <SNAPIProvider>
+      <App />
+    </SNAPIProvider>
   </AuthProvider>,
   document.getElementById('root')
 );

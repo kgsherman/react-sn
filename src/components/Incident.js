@@ -1,74 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
-import SNAPI from '../utils/snapi';
 
 import Avatar from './Avatar';
 
+import RecordHOC from './RecordHOC';
+
 const Incident = (props) => {
-    const [data, setData] = useState(false);
-    const [picture, setPicture] = useState('');
+    const Success = ({ data }) => {
+        console.log(data);
+        return (
+            <div className="container">
+                <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+                    <ul>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/incidents">Incidents</Link></li>
+                        <li className="is-active"><Link to="/#" aria-current="page">{data ? data.result.number.value : 'Loading...'}</Link></li>
+                    </ul>
+                </nav>
+                <div>
+                    <Avatar userId={data.result.caller_id.value} diameter="64px" />
+                    <h4 className="is-size-4">{data.result.caller_id.display_value} reports...</h4>
+                    <h3 className="is-size-3 has-text-weight-semibold">{data.result.short_description.value}</h3>
+                    <p className="">{data.result.description.value}</p>
+                </div>
+            </div>
+        )
+    };
 
-    const sn = new SNAPI({
-        token: window.localStorage.getItem('token'),
-        instance: 'dev59227'
-    });
+    const Loading = () => (<div>Loading</div>);
+    const _Error = () => (<div>Error</div>);
+    const Unauthorized = () => (<div>renderUnauthorized</div>);
 
-    const getIncidentData = async () => {
-
-        const data = await sn.getRecord('incident', props.match.params.id, {
+    return (<RecordHOC
+        table='incident'
+        sysId={props.match.params.id}
+        options={{
             fields: ['number', 'caller_id', 'state', 'short_description', 'description'],
             displayValue: 'all',
-        });
+        }}
+        Success={Success}
+        Loading={Loading}
+        Error={_Error}
+        Unauthorized={Unauthorized}
+    />);
 
-        const pictureData = await sn.getProfilePicture(data.caller_id.value);
-        setPicture(pictureData);
-
-        return data;
-    }
-
-    const getIncidentHistory = async () => {
-
-    }
-
-    useEffect(() => {
-        (async () => {
-            const data = await getIncidentData();
-            console.log('data', data);
-            setData(data);
-        })();
-    }, [props.match.params.id]);
-
-    const renderLoading = () => (
-        <div>
-            Loading...
-        </div>
-    );
-
-    const renderIncident = () => (
-        <> 
-            <Avatar src={picture} diameter="64px" />
-            <h4 className="is-size-4 has-text-weight-semibold">{data.short_description.value}</h4>
-            <p className="">{data.description.value}</p>
-        </>
-    )
-
-
-    return (
-        <div className="container">
-            <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/incidents">Incidents</Link></li>
-                    <li className="is-active"><Link to="/#" aria-current="page">{data ? data.number.value : 'Loading...'}</Link></li>
-                </ul>
-            </nav>
-            {data
-                ? renderIncident()
-                : renderLoading()
-            }
-        </div>
-    );
-};
+}
 
 export default Incident;
