@@ -45,40 +45,39 @@ const RecordHOC = ({ table, sysId, options, Success, Loading, Error, Unauthorize
         data: null,
     });
 
-    const sn = useSNAPI();
+    const { connection } = useSNAPI();
+    
+    useEffect(() => {
 
-    const getRecord = async (table, sysId, options) => {
-        const response = await sn.getRecord(table, sysId, options);
-        if (response.ok) {
-            const data = await response.json();
-            dispatch({
-                type: 'success',
-                data
-            });
-        } else if (response.status === 401) {
-            dispatch({ type: 'unauthorized' });
-        } else {
-            try {
+        const getRecord = async (table, sysId, options) => {
+            const response = await connection.getRecord(table, sysId, options);
+            if (response.ok) {
                 const data = await response.json();
                 dispatch({
-                    type: 'error',
+                    type: 'success',
                     data
                 });
-            } catch (e) {
-                console.log(response);
-                dispatch({ 
-                    type: 'error',
-                    data: response,
-                });
+            } else if (response.status === 401) {
+                dispatch({ type: 'unauthorized' });
+            } else {
+                try {
+                    const data = await response.json();
+                    dispatch({
+                        type: 'error',
+                        data
+                    });
+                } catch (e) {
+                    console.log('error', response);
+                    dispatch({
+                        type: 'error',
+                        data: response,
+                    });
+                }
             }
         }
-    }
 
-    useEffect(() => {
-        (async () => {
-            getRecord(table, sysId, options);
-        })();
-    }, []);
+        getRecord(table, sysId, options);
+    }, [table, sysId, options, connection]);
 
 
     return <state.component data={state.data} />;

@@ -45,41 +45,41 @@ const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) =
         data: null,
     });
 
-    const sn = useSNAPI();
-
-    const getRecords = async (table, options) => {
-        const response = await sn.getRecords(table, options);
-        if (response.ok) {
-            const data = (await response.json()).result;
-            dispatch({
-                type: 'success',
-                data
-            });
-        } else if (response.status === 401) {
-            dispatch({ type: 'unauthorized' });
-        } else {
-            try {
-                const data = await response.json();
-                console.log(data);
-                dispatch({
-                    type: 'error',
-                    data
-                });
-            } catch (e) {
-                console.log(response);
-                dispatch({ 
-                    type: 'error',
-                    data: response,
-                });
-            }
-        }
-    }
+    const { connection } = useSNAPI();
 
     useEffect(() => {
-        (async () => {
-            getRecords(table, options);
-        })();
-    }, []);
+        const getRecords = async (table, options) => {
+
+            const response = await connection.getRecords(table, options);
+
+            if (response.ok) {
+                const data = (await response.json()).result;
+                dispatch({
+                    type: 'success',
+                    data
+                });
+            } else if (response.status === 401) {
+                dispatch({ type: 'unauthorized' });
+            } else {
+                try {
+                    const data = await response.json();
+                    console.log(data);
+                    dispatch({
+                        type: 'error',
+                        data
+                    });
+                } catch (e) {
+                    console.log(response);
+                    dispatch({
+                        type: 'error',
+                        data: response,
+                    });
+                }
+            }
+        }
+
+        getRecords(table, options);
+    }, [options, table, connection]);
 
 
     return <state.component data={state.data} />;

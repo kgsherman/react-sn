@@ -6,7 +6,6 @@ import AuthCallback from './AuthCallback';
 import Incidents from './Incidents';
 import Incident from './Incident';
 import Header from './Header';
-import Authenticator from './Authenticator';
 import Unauthorized from './Unauthorized';
 import Authorizing from './Authorizing';
 

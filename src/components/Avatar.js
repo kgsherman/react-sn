@@ -55,7 +55,7 @@ const Avatar = ({ userId, diameter }) => {
 
 
 
-    const sn = useSNAPI();
+    const { connection } = useSNAPI();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -63,7 +63,7 @@ const Avatar = ({ userId, diameter }) => {
 
         (async () => {
             try {
-                const profilePic = await sn.getProfilePicture(userId, signal);
+                const profilePic = await connection.getProfilePicture(userId, signal);
                 if (profilePic) {
                     setPictureData(profilePic);
                 }
@@ -77,7 +77,7 @@ const Avatar = ({ userId, diameter }) => {
         return function cleanup() {
             controller.abort();
         }
-    }, []);
+    }, [connection, userId]);
 
     return (
         <>

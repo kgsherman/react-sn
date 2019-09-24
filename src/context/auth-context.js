@@ -13,20 +13,17 @@ export const AuthContext = createContext(initialState);
 const reducer = (state, action) => {
   switch (action.type) {
     case 'loading':
-      console.log('Setting auth state to loading.')
       return {
         ...state,
         loading: true,
       }
     case 'signIn':
-      console.log('Setting auth state to signed in.')
       return {
         loading: false,
         authenticated: true,
         user: action.user
       };
     case 'signOut':
-      console.log('Setting auth state to signed out.');
       return {
         loading: false,
         authenticated: false,
