@@ -6,13 +6,12 @@ import { useAuth } from '../context/auth-context';
 import { oauth2Uri } from '../utils/auth';
 
 const HeaderElement = styled.div`
-  color: White;
-  background-color: #16697A;
+  /* background-color: #FBFBF2; */
   padding: 1.4em;
-  border-bottom-width: 4px;
+  /*border-bottom-width: 4px;
   border-bottom-style: solid;
-  border-bottom-color: #82C0CC;
-  box-shadow: 0px 3px 3px 0 rgba(0, 0, 0, 0.25);
+  border-bottom-color: #847577;*/
+  box-shadow: 0px 3px 5px 0 rgba(0, 0, 0, 0.1);
 `;
 
 const Header = (props) => {
@@ -32,14 +31,14 @@ const Header = (props) => {
 
   const renderLoading = () => (
     <div className="level-item">
-      ...
+      <button className="level-item button is-small is-rounded is-loading">Loading</button>
     </div>
   );
 
   const renderSignedIn = () => (
     <>
       <span className="level-item">{authState.user.name}</span>
-      <button className="level-item button is-small" onClick={handleSignOut}>
+      <button className="level-item button is-small is-rounded" onClick={handleSignOut}>
         Sign out
       </button>
     </>
@@ -47,7 +46,7 @@ const Header = (props) => {
 
   const renderSignedOut = () => (
     <div className="level-item">
-      <button onClick={handleSignIn}>Sign in</button>
+      <button className="level-item button is-small is-primary is-rounded" onClick={handleSignIn}>Sign in</button>
     </div>
   );
 

@@ -9,10 +9,12 @@ const TileElement = styled.div`
     width: 100%;
     height: 200px;
     background-color: White;
-    box-shadow: 0px 2px 3px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 1px 1px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #dfdfdf;
+    border-radius: 2px;
 `;
 
-const Tile = ({children}) => (
+const Tile = ({ children }) => (
     <TileElement>
         {children}
     </TileElement>
@@ -20,24 +22,26 @@ const Tile = ({children}) => (
 
 const Home = () => (
     <>
-    <section className="hero">
-        <p className="title is-2">React SN</p>
-    </section>
-    <section className="section">
-        <div className="container">
-            <div className="columns">
-                <div className="column">
-                    <Link to="/incidents"><Tile>Incidents</Tile></Link>
-                </div>
-                <div className="column">
-                    <Tile>Tile 2</Tile>
-                </div>
-                <div className="column">
-                    <Tile>Tile 3</Tile>
+        <section className="hero">
+            <div className="container">
+                <p className="title is-2">React SN</p>
+            </div>
+        </section>
+        <section className="section">
+            <div className="container">
+                <div className="columns">
+                    <div className="column">
+                        <Link to="/incidents"><Tile>Incidents</Tile></Link>
+                    </div>
+                    <div className="column">
+                        <Tile>Tile 2</Tile>
+                    </div>
+                    <div className="column">
+                        <Tile>Tile 3</Tile>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
     </>
 );
 

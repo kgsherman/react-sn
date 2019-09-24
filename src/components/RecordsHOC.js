@@ -8,6 +8,7 @@ const ERROR = Symbol('ERROR');
 
 
 const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) => {
+    const { connection, refreshConnection } = useSNAPI();
 
     const reducer = (state, action) => {
         switch (action.type) {
@@ -24,6 +25,7 @@ const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) =
                     data: action.data,
                 };
             case 'unauthorized':
+                refreshConnection();
                 return {
                     stage: UNAUTHORIZED,
                     component: Unauthorized,
@@ -45,7 +47,6 @@ const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) =
         data: null,
     });
 
-    const { connection } = useSNAPI();
 
     useEffect(() => {
         const getRecords = async (table, options) => {
