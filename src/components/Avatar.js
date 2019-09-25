@@ -3,12 +3,26 @@ import styled, { keyframes } from 'styled-components';
 
 import { useSNAPI } from '../context/snapi-context';
 
-
-const AvatarElement = styled.img`
-    object-fit: cover;
+const AvatarWrapper = styled.div`
+    position: relative;
     border-radius: 50%;
     height: ${props => props.diameter};
     width: ${props => props.diameter};
+    overflow: hidden;
+`;
+
+const AvatarElement = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+`;
+
+const AvatarShade = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: White;
+    opacity: 0.66;
 `;
 
 const rotate = keyframes`
@@ -52,9 +66,6 @@ const Avatar = ({ userId, diameter }) => {
     const [pictureData, setPictureData] = useState('/default-avatar.png');
     const [loading, setLoading] = useState(true);
 
-
-
-
     const { connection } = useSNAPI();
 
     useEffect(() => {
@@ -81,8 +92,13 @@ const Avatar = ({ userId, diameter }) => {
 
     return (
         <>
-            {loading && <LoadingRing diameter={diameter}><div></div><div></div><div></div><div></div></LoadingRing>}
-            <AvatarElement diameter={diameter} src={pictureData} />
+            <AvatarWrapper diameter={diameter}>
+                {loading && <>
+                    <LoadingRing diameter={diameter}><div></div><div></div><div></div><div></div></LoadingRing>
+                    <AvatarShade/>
+                </>}
+                <AvatarElement src={pictureData} />
+            </AvatarWrapper>
         </>
     );
 }

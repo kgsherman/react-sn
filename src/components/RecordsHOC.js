@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { useSNAPI } from '../context/snapi-context';
+import { useAuth } from '../context/auth-context';
 
 const LOADING = Symbol('LOADING');
 const SUCCESS = Symbol('SUCCESS');
@@ -9,6 +10,7 @@ const ERROR = Symbol('ERROR');
 
 const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) => {
     const { connection, refreshConnection } = useSNAPI();
+    const { signIn } = useAuth();
 
     const reducer = (state, action) => {
         switch (action.type) {

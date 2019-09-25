@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
+import Avatar from './Avatar';
 
 import { useAuth } from '../context/auth-context';
 
@@ -37,6 +40,7 @@ const Header = (props) => {
 
   const renderSignedIn = () => (
     <>
+      <span className="level-item"><Avatar userId={authState.user.sysId} diameter="2em" /></span>
       <span className="level-item">{authState.user.name}</span>
       <button className="level-item button is-small is-rounded" onClick={handleSignOut}>
         Sign out
@@ -54,7 +58,7 @@ const Header = (props) => {
     <HeaderElement className="level">
       <div className="level-left">
         <p className="level-item">
-          React-SN
+          <Link to="/">React-SN</Link>
         </p>
       </div>
       <div className="level-right">
