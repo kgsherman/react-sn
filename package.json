@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "homepage": "https://kgsherman.github.io/react-sn",
   "dependencies": {
+    "@mdi/js": "^4.4.95",
+    "@mdi/react": "^1.2.1",
     "client-oauth2": "^4.2.5",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

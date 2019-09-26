@@ -26,19 +26,22 @@ const History = ({ sysId, table }) => {
     if (loading) return (<div>...</div>);
 
     return (
-
-        <RecordsHOC
-            table="sys_history_line"
-            options={{
-                fields: ['sys_id', 'field', 'label', 'old', 'new', 'set', 'set.id', 'user', 'update_time', 'internal_checkpoint'],
-                displayValue: 'all',
-                query: `set.id=${sysId}^fieldIN${fields}`,
-            }}
-            Success={HistorySuccess}
-            Loading={HistoryLoading}
-            Error={HistoryError}
-            Unauthorized={HistoryError}
-        />
+        <>
+            <h4 className="is-size-4">Case history</h4>
+            <hr />
+            <RecordsHOC
+                table="sys_history_line"
+                options={{
+                    fields: ['sys_id', 'field', 'label', 'old', 'new', 'set', 'set.id', 'user', 'update_time', 'internal_checkpoint'],
+                    displayValue: 'all',
+                    query: `set.id=${sysId}^fieldIN${fields}`,
+                }}
+                Success={HistorySuccess}
+                Loading={HistoryLoading}
+                Error={HistoryError}
+                Unauthorized={HistoryError}
+            />
+        </>
     )
 };
 

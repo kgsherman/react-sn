@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Icon from '@mdi/react';
+import { mdiChatOutline } from '@mdi/js'
 
 import Avatar from './Avatar';
 import History from './History';
@@ -8,6 +11,57 @@ import RecordHOC from './RecordHOC';
 import RecordsHOC from './RecordsHOC';
 
 import { useSNAPI } from '../context/snapi-context';
+
+const HR = styled.hr`
+    box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.1);
+`;
+
+const Caller = styled.div`
+    display: flex;
+    margin-bottom: 1em;
+`;
+
+const CallerText = styled.div`
+    margin-left: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+`;
+
+const CallerTitle = styled.h4`
+    font-size: 1.5em;
+    line-height: 1em;
+`;
+
+const CallerSubtitle = styled.div`
+    font-style: italic;
+    font-weight: lighter;
+`;
+
+const ShortDescription = styled.h3`
+    font-size: 1.6em;
+    font-weight: 500;
+`;
+
+const DescriptionBox = styled.div`
+    display: flex;
+    margin: 1.2em 0;
+`;
+
+const Description = styled.div`
+    background-color: white;
+    white-space: pre-wrap;
+    border-left: 1px solid LightGrey;
+    padding: 0.8em 1.2em;
+    margin-left: 0.8em;
+    box-shadow: 0px 2px 3px 0 rgba(0, 0, 0, 0.1);
+`;
+
+const AdditionalInfo = styled.div`
+    border-left: 1px solid LightGrey;
+    padding-left: 1em;
+    margin: 1.5em;
+`;
 
 const Incident = (props) => {
     const { connection } = useSNAPI();
@@ -21,89 +75,10 @@ const Incident = (props) => {
                     <li className="is-active"><Link to="/#" aria-current="page">{data ? data.result.number.display_value : 'Loading...'}</Link></li>
                 </ul>
             </nav>
+            <HR />
             {children}
         </div>
     );
-
- /*   const HistoryLine = ({ data }) => {
-        return (
-            null
-        );
-    }
-
-    const HistorySet = ({ updates, user, dt }) => {
-        return (
-            <div class="section">
-                <h4>Updated by {user} on {dt}</h4>
-                <table className='table'>
-                    {updates.map(update => <tr>
-                        <td>{update.label.value}</td>
-                        <td>{update.new.value}</td>
-                        <td>{update.old.value && <span>(was {update.old.value})</span>}</td>
-                    </tr>)}
-                </table>
-            </div>
-        );
-    }
-
-    const HistorySuccess = ({ data }) => {
-        const sets = data.reduce((accumulator, current) => {
-            const checkpoint = current.internal_checkpoint.value;
-
-            return {
-                ...accumulator,
-                [checkpoint]: {
-                    user: current.user.display_value,
-                    dt: current.update_time.value,
-                    updates: [...((accumulator[checkpoint] && accumulator[checkpoint].updates) || []), current]
-                }
-            };
-        }, {})
-
-        return (
-            <div>
-                {Object.keys(sets).reverse().map(setId => {
-                    const set = sets[setId];
-                    return <HistorySet {...set} />
-                })}
-            </div>
-        );
-    };
-
-
-
-    const History = ({ incidentId }) => {
-        const [loading, setLoading] = useState(true);
-        const [fields, setFields] = useState(null);
-
-        const getFields = async () => {
-            const fields = await connection.getProperty('glide.ui.incident_activity.fields');
-            setFields(fields);
-            setLoading(false);
-        }
-
-        useEffect(() => {
-            getFields();
-        }, []);
-
-        if (loading) return (<div>...</div>);
-
-        return (
-
-            <RecordsHOC
-                table="sys_history_line"
-                options={{
-                    fields: ['sys_id', 'field', 'label', 'old', 'new', 'set', 'set.id', 'user', 'update_time', 'internal_checkpoint'],
-                    displayValue: 'all',
-                    query: `set.id=${incidentId}^fieldIN${fields}`,
-                }}
-                Success={HistorySuccess}
-                Loading={Loading}
-                Error={_Error}
-                Unauthorized={Unauthorized}
-            />
-        )
-    };*/
 
     const Loading = () => (<div>Loading</div>);
     const _Error = () => (<div>Error</div>);
@@ -111,15 +86,27 @@ const Incident = (props) => {
 
     const DetailSuccess = ({ data }) => (
         <Page data={data}>
-            <section className="section">
-                <Avatar userId={data.result.caller_id.value} diameter="64px" />
-                <h4 className="is-size-4">{data.result.caller_id.display_value} reports...</h4>
-                <h3 className="is-size-3 has-text-weight-semibold">{data.result.short_description.value}</h3>
-                <p className="">{data.result.description.value}</p>
-            </section>
-            <section>
-                <History sysId={data.result.sys_id.value} table="incident" />
-            </section>
+            <div className="columns">
+                <div className="column is-three-quarters">
+                    <Caller>
+                        <Avatar userId={data.result.caller_id.value} diameter="48px" />
+                        <CallerText>
+                            <CallerTitle>{data.result.caller_id.display_value}</CallerTitle>
+                            <CallerSubtitle>reports...</CallerSubtitle>
+                        </CallerText>
+                    </Caller>
+                    <ShortDescription>{data.result.short_description.value}</ShortDescription>
+                    <DescriptionBox>
+                        <Icon path={mdiChatOutline} size={2} style={{ opacity: 0.05 }} />
+                        <Description>{data.result.description.value}</Description>
+                    </DescriptionBox>
+                </div>
+                <AdditionalInfo className="column">
+                    <p>Priority: {data.result.priority.display_value}</p>
+                </AdditionalInfo>
+            </div>
+            <History sysId={data.result.sys_id.value} table="incident" />
+
         </Page>
     )
     return (
@@ -127,7 +114,7 @@ const Incident = (props) => {
             table='incident'
             sysId={props.match.params.id}
             options={{
-                fields: ['sys_id', 'number', 'caller_id', 'state', 'short_description', 'description'],
+                fields: ['sys_id', 'number', 'caller_id', 'state', 'short_description', 'description', 'priority'],
                 displayValue: 'all',
             }}
             Success={DetailSuccess}
