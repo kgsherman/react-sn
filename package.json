@@ -4,12 +4,12 @@
   "homepage": "https://kgsherman.github.io/react-sn",
   "dependencies": {
     "client-oauth2": "^4.2.5",
-    "popsicle": "^12.0.4",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
+    "sn-rest-async": "^1.0.0",
     "styled-components": "^4.3.2"
   },
   "scripts": {
