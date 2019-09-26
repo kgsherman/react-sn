@@ -5,7 +5,10 @@ import HistorySet from './HistorySet';
 
 const HistoryWrapper = styled.div`
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column-reverse
+    background-color: #f7f7f7;
+    padding: 1em;
+    border: 1px solid WhiteSmoke;
 `;
 
 

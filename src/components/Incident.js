@@ -38,6 +38,14 @@ const CallerSubtitle = styled.div`
     font-weight: lighter;
 `;
 
+const IncidentBox = styled.div`
+    margin: 2em 0;
+    padding: 1.2em;
+    background-color: White;
+    border-color: WhiteSmoke;
+    box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.1);
+`;
+
 const ShortDescription = styled.h3`
     font-size: 1.6em;
     font-weight: 500;
@@ -104,26 +112,28 @@ const Incident = (props) => {
 
     const DetailSuccess = ({ data }) => (
         <Page data={data}>
-            <div className="columns">
-                <div className="column is-three-quarters">
-                    <Caller>
-                        <Avatar userId={data.result.caller_id.value} diameter="48px" />
-                        <CallerText>
-                            <CallerTitle>{data.result.caller_id.display_value}</CallerTitle>
-                            <CallerSubtitle>reports...</CallerSubtitle>
-                        </CallerText>
-                    </Caller>
-                    <ShortDescription>{data.result.short_description.value}</ShortDescription>
-                    <DescriptionBox>
-                        <Icon path={mdiChatOutline} size={2} style={{ opacity: 0.05 }} />
-                        <Description>{data.result.description.value}</Description>
-                    </DescriptionBox>
+            <Caller>
+                <Avatar userId={data.result.caller_id.value} diameter="48px" />
+                <CallerText>
+                    <CallerTitle>{data.result.caller_id.display_value}</CallerTitle>
+                    <CallerSubtitle>reports...</CallerSubtitle>
+                </CallerText>
+            </Caller>
+            <IncidentBox>
+                <div className="columns">
+                    <div className="column is-three-quarters">
+                        <ShortDescription>{data.result.short_description.value}</ShortDescription>
+                        <DescriptionBox>
+                            <Icon path={mdiChatOutline} size={2} style={{ opacity: 0.05 }} />
+                            <Description>{data.result.description.value}</Description>
+                        </DescriptionBox>
+                    </div>
+                    <AdditionalInfo className="column">
+                        <p>Priority: {data.result.priority.display_value}</p>
+                    </AdditionalInfo>
                 </div>
-                <AdditionalInfo className="column">
-                    <p>Priority: {data.result.priority.display_value}</p>
-                </AdditionalInfo>
-            </div>
-            <History sysId={data.result.sys_id.value} table="incident" internalUsers={data.result.caller_id.value} textFields={['comments']} />
+                <History sysId={data.result.sys_id.value} table="incident" internalUsers={data.result.caller_id.value} textFields={['comments']} />
+            </IncidentBox>
         </Page>
     )
     return (
