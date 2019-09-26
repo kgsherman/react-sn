@@ -8,7 +8,7 @@ const UNAUTHORIZED = Symbol('UNAUTHORIZED');
 const ERROR = Symbol('ERROR');
 
 
-const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) => {
+const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized, children }) => {
     const { connection, refreshConnection } = useSNAPI();
     const { signIn } = useAuth();
 
@@ -17,7 +17,7 @@ const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) =
             case 'success':
                 return {
                     stage: SUCCESS,
-                    component: Success,
+                    component: null,
                     data: action.data,
                 };
             case 'error':
@@ -57,6 +57,7 @@ const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) =
 
             if (response.ok) {
                 const data = (await response.json()).result;
+
                 dispatch({
                     type: 'success',
                     data
@@ -85,7 +86,9 @@ const RecordsHOC = ({ table, options, Success, Loading, Error, Unauthorized }) =
     }, [options, table, connection]);
 
 
-    return <state.component data={state.data} />;
+    return state.stage === SUCCESS 
+        ? React.Children.map(children, child => React.cloneElement(child, { records: state.data }))
+        : <state.component records={state.data} />
 }
 
 export default RecordsHOC;

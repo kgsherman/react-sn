@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Icon from '@mdi/react';
@@ -63,6 +63,20 @@ const AdditionalInfo = styled.div`
     margin: 1.5em;
 `;
 
+const Loader = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    h1 {
+        font-size: 1.3em;
+        font-style: italic;
+        font-weight: 300;
+    }
+`;
+
 const Incident = (props) => {
     const { connection } = useSNAPI();
 
@@ -80,7 +94,11 @@ const Incident = (props) => {
         </div>
     );
 
-    const Loading = () => (<div>Loading</div>);
+    const Loading = () => (
+        <Loader>
+            <h1>Loading...</h1>
+        </Loader>
+    );
     const _Error = () => (<div>Error</div>);
     const Unauthorized = () => (<div>renderUnauthorized</div>);
 
@@ -105,8 +123,7 @@ const Incident = (props) => {
                     <p>Priority: {data.result.priority.display_value}</p>
                 </AdditionalInfo>
             </div>
-            <History sysId={data.result.sys_id.value} table="incident" />
-
+            <History sysId={data.result.sys_id.value} table="incident" internalUsers={data.result.caller_id.value} textFields={['comments']} />
         </Page>
     )
     return (

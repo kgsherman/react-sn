@@ -39,9 +39,9 @@ const Incidents = (props) => {
         </div>
     );
 
-    const Success = ({ data }) => {
+    const Success = ({ records }) => {
         return (
-            <Page data={data}>
+            <Page>
                 <IncidentTable>
                     <thead>
                         <tr>
@@ -51,7 +51,7 @@ const Incidents = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map(incident =>
+                        {records.map(incident =>
                             <tr key={incident.sys_id.value}>
                                 <td><Link to={`/incidents/${incident.sys_id.value}`}>{incident.number.value}</Link></td>
                                 <td>{incident.short_description.value}</td>
@@ -82,11 +82,12 @@ const Incidents = (props) => {
                 query: `active=true^assigned_to=${authState.user.sysId}`,
                 displayValue: 'all',
             }}
-            Success={Success}
             Loading={Loading}
             Error={_Error}
             Unauthorized={Unauthorized}
-        />
+        >
+            <Success />
+        </RecordsHOC>
 
     );
 

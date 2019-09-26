@@ -1,28 +1,52 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import HistorySet from './HistorySet';
 
-const HistorySuccess = ({ data }) => {
-    const sets = data.reduce((accumulator, current) => {
-        const checkpoint = current.internal_checkpoint.value;
+const HistoryWrapper = styled.div`
+    display: flex;
+    flex-direction: column-reverse;
+`;
+
+
+const HistorySuccess = ({ records, internalUsers, fieldOrder }) => {
+
+    const sets = records.reduce((accumulator, historyLine) => {
+
+        const setId = historyLine.internal_checkpoint.value;
+        const isInternal = internalUsers.includes(historyLine.user.value);
+
+        // need to check for duplicates because apparently that's a thing?
+        if (accumulator[setId] && accumulator[setId].historyLines && accumulator[setId].historyLines.find(line => line.field.value === historyLine.field.value))
+            return accumulator;
+
+        const checkpointData = {
+            user: historyLine.user.display_value,
+            dt: historyLine.update_time.value,
+            internal: isInternal,
+        }
+
+        const historyLines = accumulator[setId]
+            ? [...accumulator[setId].historyLines, historyLine]
+            : [historyLine];
+
 
         return {
             ...accumulator,
-            [checkpoint]: {
-                user: current.user.display_value,
-                dt: current.update_time.value,
-                updates: [...((accumulator[checkpoint] && accumulator[checkpoint].updates) || []), current]
+            [setId]: {
+                ...checkpointData,
+                historyLines: historyLines
             }
         };
     }, {})
 
     return (
-        <div>
-            {Object.keys(sets).reverse().map(setId => {
+        <HistoryWrapper>
+            {Object.keys(sets).map(setId => {
                 const set = sets[setId];
-                return <HistorySet {...set} />
+                return <HistorySet key={setId} {...set} fieldOrder={fieldOrder}/>
             })}
-        </div>
+        </HistoryWrapper>
     );
 };
 
