@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import { useSNAPI } from '../context/snapi-context';
+import { useAvatar } from '../context/avatar-context';
 
 const AvatarWrapper = styled.div`
     position: relative;
@@ -63,44 +64,26 @@ const LoadingRing = styled.div`
 `;
 
 const Avatar = ({ userId, diameter }) => {
-    const [pictureData, setPictureData] = useState('/default-avatar.png');
-    const [loading, setLoading] = useState(true);
+    //const [pictureData, setPictureData] = useState('/default-avatar.png');
+    //const [loading, setLoading] = useState(true);
 
-    const { connection } = useSNAPI();
+    // const { connection } = useSNAPI();
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
+    const { avatars, loadAvatar } = useAvatar();
+    loadAvatar(userId);
 
-        (async () => {
-            try {
-                const profilePic = await connection.getProfilePicture(userId, signal);
-                if (profilePic) {
-                    setPictureData(profilePic);
-                }
-                setLoading(false);
-            } catch (e) {
-                console.error(e);
-                setLoading(false);
-            }
-        })();
 
-        return function cleanup() {
-            controller.abort();
-        }
-    }, [connection, userId]);
-
-    return (
+    return avatars[userId] ? (
         <>
             <AvatarWrapper diameter={diameter}>
-                {loading && <>
+                {(!avatars[userId] || avatars[userId].loading) && <>
                     <LoadingRing diameter={diameter}><div></div><div></div><div></div><div></div></LoadingRing>
-                    <AvatarShade/>
+                    <AvatarShade />
                 </>}
-                <AvatarElement src={pictureData} />
+                <AvatarElement src={avatars[userId].src} />
             </AvatarWrapper>
         </>
-    );
+    ) : null;
 }
 
 export default Avatar;

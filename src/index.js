@@ -5,11 +5,14 @@ import * as serviceWorker from './serviceWorker';
 
 import { AuthProvider } from './context/auth-context';
 import { SNAPIProvider } from './context/snapi-context';
+import { AvatarProvider } from './context/avatar-context';
 
 ReactDOM.render(
   <AuthProvider>
     <SNAPIProvider>
-      <App />
+      <AvatarProvider>
+        <App />
+      </AvatarProvider>
     </SNAPIProvider>
   </AuthProvider>,
   document.getElementById('root')

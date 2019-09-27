@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { useAvatar } from '../../context/avatar-context';
+
+import Avatar from '../Avatar';
+
 const Box = styled.div`
     font-size: 0.9em;
     background-color: White;
@@ -13,14 +17,12 @@ const Box = styled.div`
 `;
 
 const BoxHeader = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     border-bottom: 1px solid WhiteSmoke;
     padding: 0.7em;
 
     h4 {
         font-weight: 500;
+        margin-left: 1em;
     }
 
     span {
@@ -67,13 +69,20 @@ const ExternalBox = styled(Box) `
     border-radius: 0.5em 0.5em 0.5em 0;
 `;
 
-const HistorySet = ({ historyLines, user, dt, internal, fieldOrder }) => {
+const HistorySet = ({ historyLines, user, userId, dt, internal, fieldOrder }) => {
     const BoxType = internal ? InternalBox : ExternalBox;
     return (
         <BoxType>
             <BoxHeader>
-                <h4>{user}</h4>
-                <span>{dt}</span>
+                <div className='level'>
+                    <div className="level-left">
+                        <Avatar userId={userId} diameter={'2em'} />
+                        <h4>{user}</h4>
+                    </div>
+                    <div className="level-right">
+                        <span>{dt}</span>
+                    </div>
+                </div>
             </BoxHeader>
             <BoxContent>
                 <BoxTable>

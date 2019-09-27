@@ -25,6 +25,7 @@ const HistorySuccess = ({ records, internalUsers, fieldOrder }) => {
 
         const checkpointData = {
             user: historyLine.user.display_value,
+            userId: historyLine.user.value,
             dt: historyLine.update_time.value,
             internal: isInternal,
         }
