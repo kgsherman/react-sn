@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
-import SNAPI from 'sn-rest-async';
+//import SNAPI from 'sn-rest-async';
+import SNAPI from 'snapi';
 
 const createConnection = () => {
     const token = window.localStorage.getItem('token');

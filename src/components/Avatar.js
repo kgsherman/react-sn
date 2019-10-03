@@ -70,7 +70,10 @@ const Avatar = ({ userId, diameter }) => {
     // const { connection } = useSNAPI();
 
     const { avatars, loadAvatar } = useAvatar();
-    loadAvatar(userId);
+
+    useEffect(() => {
+        loadAvatar(userId);
+    }, [])
 
 
     return avatars[userId] ? (

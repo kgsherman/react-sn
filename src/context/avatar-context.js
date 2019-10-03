@@ -1,48 +1,57 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext , useReducer} from 'react';
 
 import { useSNAPI } from '../context/snapi-context';
 
 export const AvatarContext = createContext({});
 
 export const AvatarProvider = ({ children }) => {
-    const [avatars, setAvatars] = useState({});
-    const { connection } = useSNAPI();
-
     const defaultImage = '/default-avatar.png';
 
-    const loadAvatar = async (userId) => {
-        if (avatars[userId]) {
-            return;
-        }
-        
-        console.log('now loading ' + userId, {...avatars});
+    const reducer = (avatars, action) => {
 
-        setAvatars({
-            ...avatars,
-            [userId]: {
-                src: defaultImage,
-                loading: true,
-            }
-        });
+        switch (action.type) {
+            case 'loaded':
+                return {
+                    ...avatars,
+                    [action.userId]: {
+                        src: action.src || defaultImage,
+                        loading: false,
+                    }
+                }
+            case 'loading':
+                return {
+                    ...avatars,
+                    [action.userId]: {
+                        src: defaultImage,
+                        loading: true,
+                    }
+                }
+            default:
+                throw new Error();
+        }
+    }
+
+    const { connection } = useSNAPI();
+    const [avatars, dispatch] = useReducer(reducer, {});
+
+
+    const loadAvatar = async (userId) => {
+        if (avatars[userId])
+            return;
+
+        dispatch({ type: 'loading', userId })
 
         try {
             const profilePic = await connection.getProfilePicture(userId);
-            setAvatars({
-                ...avatars,
-                [userId]: {
-                    src: profilePic || defaultImage,
-                    loading: false,
-                }
-            });
-            console.log('done loading', {...avatars})
+            dispatch({
+                userId, 
+                type: 'loaded', 
+                src: profilePic || defaultImage });
         } catch (e) {
-            setAvatars({
-                ...avatars,
-                [userId]: {
-                    src: defaultImage,
-                    loading: false,
-                }
-            })
+            dispatch({
+                userId, 
+                type: 'loaded', 
+                src: defaultImage });
         }
     }
 
